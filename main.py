@@ -1,6 +1,7 @@
 #This is both client and server combined
 
 import os
+import platform
 import socket
 from random import randint
 
@@ -9,6 +10,14 @@ from random import randint
 #s.connect(("8.8.8.8", 80))
 #SERVER_TCP_IP = str(s.getsockname()[0])
 #s.close()
+
+operatingSys = platform.system()
+
+if operatingSys == "Windows":
+    clear = os.system("cls")
+else:
+    clear = os.system("clear")
+
 
 SERVER_TCP_IP = "192.168.0.19"
     
