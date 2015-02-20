@@ -3,6 +3,8 @@
 import os
 import socket
 from random import randint
+
+#The next 4 lines were a "hackish" method of finding the local address for use in the server init.
 #s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 #s.connect(("8.8.8.8", 80))
 #SERVER_TCP_IP = str(s.getsockname()[0])
@@ -38,6 +40,7 @@ opponentSpeed = 0
 
 #Processes received commands on server side
 def serverProcess(data, hp, level, xptonext, money, attack, defence, speed, opponentUsername, opponentHp, opponentLevel, opponentAttack, opponentDefence, opponentSpeed):
+    #Splits data after every space into array key
     cmd = data.split(" ")
     if cmd[0] == "attack":
         totalDamage = 0
