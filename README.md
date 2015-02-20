@@ -6,7 +6,6 @@ Only Commands available so far are: attack
 # Developers 
 
 To run you need to have Python 2.7 or below
-Currently only works on Windows due to os.system, working on OS detection.
 
 # Bugs
 
