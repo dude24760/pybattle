@@ -16,6 +16,8 @@ TCP_PORT = 2014
 BUFFER_SIZE = 2048
 decision = 0
 
+totalDamage = 0
+
 #Local user stats
 username = ""
 hp = 100
@@ -38,9 +40,12 @@ opponentSpeed = 0
 def serverProcess(data, hp, level, xptonext, money, attack, defence, speed, opponentUsername, opponentHp, opponentLevel, opponentAttack, opponentDefence, opponentSpeed):
     cmd = data.split(" ")
     if cmd[0] == "attack":
-        hp = hp - opponentAttack
-        print "You lost " + str(opponentAttack) + " hp."
-        conn.send(str(opponentAttack))
+        totalDamage = 0
+        totalDamage = opponentAttack
+        totalDamage = totalDamage - defence
+        hp = hp - totalDamage
+        print "You lost " + str(totalDamage) + " hp."
+        conn.send(str(totalDamage))
         #raw_input()
         serverMain(data, hp, level, xptonext, money, attack, defence, speed, opponentUsername, opponentHp, opponentLevel, opponentAttack, opponentDefence, opponentSpeed)
 
@@ -48,30 +53,36 @@ def serverProcess(data, hp, level, xptonext, money, attack, defence, speed, oppo
 def clientProcess(data, hp, level, xptonext, money, attack, defence, speed, opponentUsername, opponentHp, opponentLevel, opponentAttack, opponentDefence, opponentSpeed):
     cmd = data.split(" ")
     if cmd[0] == "attack":
-        hp = hp - opponentAttack
-        print "You lost " + str(opponentAttack) + " hp."
-        s.send(str(opponentAttack))
+        totalDamage = 0
+        totalDamage = opponentAttack
+        totalDamage = totalDamage - defence
+        hp = hp - totalDamage
+        print "You lost " + str(totalDamage) + " hp."
+        s.send(str(totalDamage))
         #raw_input()
         clientMain(data, hp, level, xptonext, money, attack, defence, speed, opponentUsername, opponentHp, opponentLevel, opponentAttack, opponentDefence, opponentSpeed)
 
 #Main loop for client. Displays vars and asks for command.
 def clientMain(data, hp, level, xptonext, money, attack, defence, speed, opponentUsername, opponentHp, opponentLevel, opponentAttack, opponentDefence, opponentSpeed):
     #os.system("cls")
+    action = ""
     print "Username:" + username + " HP:" + str(hp) + " Level:" + str(level) + " Attack:" + str(attack) + " Defence:" + str(defence) + " Speed:" + str(speed)
     print "Opponent:" + opponentUsername + " HP:" + str(opponentHp) + " Level:" + str(opponentLevel) + " Attack:" + str(opponentAttack) + " Defence:" + str(opponentDefence) + " Speed:" + str(opponentSpeed)
     print "Your turn."
-    action = raw_input(">")
+    while action == "":
+        action = raw_input(">")
+
     cmd = action.split(" ")
     
-    if action == "help":
-        print "Later."
-        null = raw_input()
-    elif cmd[0] == "attack":
+    if cmd[0] == "attack":
         s.send(action)
         data = s.recv(BUFFER_SIZE)
         opponentHp = opponentHp - int(data)
         clientWait(data, hp, level, xptonext, money, attack, defence, speed, opponentUsername, opponentHp, opponentLevel, opponentAttack, opponentDefence, opponentSpeed)
-
+    else:
+        print "Not a valid command."
+        clientMain(data, hp, level, xptonext, money, attack, defence, speed, opponentUsername, opponentHp, opponentLevel, opponentAttack, opponentDefence, opponentSpeed)
+        
 #Same as clientMain
 def serverMain(data, hp, level, xptonext, money, attack, defence, speed, opponentUsername, opponentHp, opponentLevel, opponentAttack, opponentDefence, opponentSpeed):
     print "Your turn"
